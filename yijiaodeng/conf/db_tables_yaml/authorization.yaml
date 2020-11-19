@@ -1,0 +1,14 @@
+#注: username和usrgrpname不能同时设置, hostip和hstgrpname不能同时设置
+#auth1:
+#  authorizationname: heika
+#  username: wsj
+#  usrgrpname: ops
+#  hostip: 192.168.1.251
+#  hstgrpname: dev
+#  remoteusername: hdfs
+
+auth1:
+  authorizationname: authwsj7
+  usrgrpname: ops
+  hstgrpname: puhui
+  remoteusername: root
