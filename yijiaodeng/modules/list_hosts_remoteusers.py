@@ -7,18 +7,16 @@ from modules import ssh_login
 
 conn = conn_db_setting.engine.connect()
 
-break_flag = False
 hosts_remoteusers_all = {}
 hostips_hostports = {}
 remoteusernames_remoteuserpass = {}
 hostid_hostip_temp = {}
 only_hostips = []
 only_remoteusers = []
-hostip_choice = ""
-remoteusername_choice = ""
 
 def main(my_name):
-    global break_flag
+    break_flag = False
+
     # 清空主机列表，防止多次选择，列表数据重复
     only_hostips.clear()
     list_hosts(my_name)
