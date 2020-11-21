@@ -22,7 +22,7 @@ def main(my_name):
     list_hosts(my_name)
     while True:
         try:
-            input_str = input('请选择主机编号, 输入q返回主菜单, 回车显示主机列表: ').strip()
+            input_str = input('请选择主机编号, 输入q返回主菜单, 回车显示主机列表[ctrl+d退出登录]: ').strip()
             if input_str.isdigit():
                 if only_hostips[int(input_str)]:
                     # 清空用户列表，防止多次选择，列表数据重复
@@ -31,7 +31,7 @@ def main(my_name):
                     list_remoteusers(int(input_str))
                     while True:
                         try:
-                            input_str = input('请选择登录用户编号, 输入q返回主菜单: ').strip()
+                            input_str = input('请选择登录用户编号, 输入q返回主菜单[ctrl+d退出登录]: ').strip()
                             if input_str.isdigit():
                                 if only_remoteusers[int(input_str)]:
                                     remoteusername_choice = only_remoteusers[int(input_str)]
@@ -43,17 +43,20 @@ def main(my_name):
                             elif input_str == "":
                                 for index, remoteusername in enumerate(only_remoteusers):
                                     print([index], remoteusername)
+                                print()
                             else:
-                                print('请输入用户编号!')
+                                print('请输入登录用户编号!')
                                 continue
                         except IndexError as e:
-                            print('用户编号输入有误, 请重新输入!')
+                            print('登录用户编号输入有误, 请重新输入!')
                             continue
             elif input_str == 'q':
                 break
             elif input_str == '':
                 for index, hostip in enumerate(only_hostips):
                     print([index], hostip)
+                print('可登录' + str(len(only_hostips)) + '台主机')
+                print()
             else:
                 print('请输入主机编号!')
                 continue
@@ -128,9 +131,11 @@ def list_hosts(my_name):
             hostid_hostip_temp[hostip] = hostid
             only_hostips.append(hostip)
 
-    # print(only_hostips)
+    #print(only_hostips)
     for index, hostip in enumerate(only_hostips):
         print([index], hostip)
+    print('可登录' + str(len(only_hostips)) + '台主机')
+    print()
 
 def list_remoteusers(input_str):
     for remoteuserid in list(set(hosts_remoteusers_all[hostid_hostip_temp[only_hostips[input_str]]])):
@@ -145,6 +150,7 @@ def list_remoteusers(input_str):
     # print(only_remoteusers)
     for index, remoteusername in enumerate(only_remoteusers):
         print([index], remoteusername)
+    print()
 
 if __name__ == '__main__':
     list_hosts('wsj')

@@ -5,11 +5,13 @@
 from conf import conn_db_setting
 from modules import list_hosts_remoteusers
 from modules import update_tables
+import signal
 
 conn = conn_db_setting.engine.connect()
 
-def func_print(my_name):
-    print('''
+def func_role_print(my_name,role):
+    if role == 'admin':
+        print('''
 [1] 查看%s用户可登录的所有主机列表
 [2] 添加用户
 [3] 添加用户组
@@ -18,29 +20,43 @@ def func_print(my_name):
 [6] 添加远程用户
 [7] 添加授权策略
     ''' %(my_name))
+    elif role == 'user':
+        print('''
+[1] 查看%s用户可登录的所有主机列表
+    ''' %(my_name))
+
+
 
 def handler(signal, frame):
     pass
 
-def login_check(my_name):
-    # 查找用户是否存在
-    find_user_cursor = conn.execute(
-        "select * from users where username=%(username)s;", username=my_name
-    )
-    find_user_result = find_user_cursor.fetchall()
-    if find_user_result:
-        return True
-    else:
-        print("没有 %s 用户" % (my_name))
-        return False
+def login_check():
+    while True:
+        for s in signal.SIGQUIT,signal.SIGINT,signal.SIGTSTP:
+            signal.signal(s, handler)
+        try:
+            my_name = input('请输入用户名: ').strip()
+            my_pass = input('请输入密码: ').strip()
 
-def function_menu_choice(my_name):
-    if my_name != "":
-        user_check_result = login_check(my_name)
-        if user_check_result:
-            while True:
-                func_print(my_name)
-                func_choice = input('请选择功能: ').strip()
+            # 查找用户是否存在
+            find_cursor = conn.execute(
+                "select username,userpass,role from users where username=%(username)s and userpass=%(userpass)s;", username=my_name,userpass=my_pass
+            )
+            find_result = find_cursor.fetchall()
+            if find_result:
+                function_menu_choice(my_name, find_result[0][2])
+            else:
+                print('用户名或密码错误, 请重新输入!\n')
+                continue
+        except EOFError as e:
+            print('\n已退出登录!\n')
+            continue
+
+def function_menu_choice(my_name,role):
+        while True:
+            func_role_print(my_name,role)
+            if role == 'admin':
+                func_choice = input('请选择功能[ctrl+d退出登录]: ').strip()
                 if func_choice.isdigit():
                     if int(func_choice) == 1:
                         list_hosts_remoteusers.main(my_name)
@@ -60,3 +76,15 @@ def function_menu_choice(my_name):
                         print('编号输入有误!')
                 else:
                     print('请输入数字！')
+            elif role == 'user':
+                func_choice = input('请选择功能[ctrl+d退出登录]: ').strip()
+                if func_choice.isdigit():
+                    if int(func_choice) == 1:
+                        list_hosts_remoteusers.main(my_name)
+                    else:
+                        print('编号输入有误!')
+                else:
+                    print('请输入数字！')
+            else:
+                print('ERROR: ' + my_name + '用户异常, 未知的用户角色!' + '\n')
+                break

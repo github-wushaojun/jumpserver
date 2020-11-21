@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 # __author__ = "wushaojun"
 
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, DateTime, ForeignKey, Enum, UniqueConstraint
 
 # 连接数据库
 engine = create_engine("mysql+pymysql://root:12345678@127.0.0.1:3306/yijiaodeng?charset=utf8", encoding='utf-8', echo=False)
@@ -15,6 +15,7 @@ users = Table('users', metadata,
         Column('userid', Integer, primary_key=True),
         Column('username', String(20), nullable=False),
         Column('userpass', String(20), nullable=False),
+        Column('role', Enum('admin','user'), nullable=False, server_default='user'),
         UniqueConstraint('username')
     )
 

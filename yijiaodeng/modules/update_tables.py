@@ -19,9 +19,9 @@ def select_users_table(username):
         userid, = select_users_result[0]
         return userid
 
-def insert_users_table(username, userpass):
+def insert_users_table(username, userpass, role='user'):
     insert_users_table = conn.execute(
-        "insert into users(username,userpass)values(%(username)s,%(userpass)s)", username=username, userpass=userpass
+        "insert into users(username,userpass,role)values(%(username)s,%(userpass)s,%(role)s)", username=username, userpass=userpass, role=role
     )
 
 def select_usrgrp_table(usrgrpname):
@@ -143,7 +143,14 @@ def create_users():
                                 print(v['username'] + '(userid:' + str(userid) + ')' + ' 已存在于users表, 无需添加!')
                                 continue
                             else:
-                                insert_users_table(v['username'],v['userpass'])
+                                if v.get('role'):
+                                    if v['role'] == 'admin' or v['role'] == 'user':
+                                        insert_users_table(v['username'],v['userpass'],v['role'])
+                                    else:
+                                        print(v['username'] + '指定了' + '未知角色' + v['role'] + ', 请修改后重新添加!')
+                                        continue
+                                else:
+                                    insert_users_table(v['username'], v['userpass'])
                                 userid = select_users_table(v['username'])
                                 print(v['username'] + '(userid:' + str(userid) + ')' + ' 添加成功!')
                             result=select_users_groups_table(userid,usrgrpid)

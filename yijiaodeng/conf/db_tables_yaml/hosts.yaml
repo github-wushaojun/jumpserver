@@ -1,4 +1,6 @@
+#注: hostport字段不设置, 默认端口是22
 
 host1:
   hostip: 192.168.1.104
   hstgrpname: licai2
+  hostport: 22222

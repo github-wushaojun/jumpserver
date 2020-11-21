@@ -10,7 +10,6 @@ from modules import auditlog
 from modules import auditlog_queue_producer
 
 
-
 # windows does not have termios...
 try:
     import termios
