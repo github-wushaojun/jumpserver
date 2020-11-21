@@ -46,7 +46,7 @@ def posix_shell(chan,username,hostip,remoteusername):
                             cmd.append(x)
                         tab_key = False
                     if len(x) == 0:
-                        sys.stdout.write('\r\n*** EOF\r\n')
+                        sys.stdout.write("\033[31;1m\r\n已退出" + remoteusername + "用户ssh登录!\r\n\n\033[0m")
                         auditlog_queue_producer.send(datetime.datetime.now(), username, hostip, remoteusername, "退出登录!")
                         # auditlog.auditlog(datetime.datetime.now(), username, hostip, remoteusername,"退出登录!")
                         break

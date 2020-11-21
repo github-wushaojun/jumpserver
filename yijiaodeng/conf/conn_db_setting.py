@@ -16,6 +16,7 @@ users = Table('users', metadata,
         Column('username', String(20), nullable=False),
         Column('userpass', String(20), nullable=False),
         Column('role', Enum('admin','user'), nullable=False, server_default='user'),
+        Column('status', Enum('on','off'), nullable=False, server_default='on'),
         UniqueConstraint('username')
     )
 

@@ -4,6 +4,7 @@
 
 from conf import conn_db_setting
 from modules import ssh_login
+import re
 
 conn = conn_db_setting.engine.connect()
 
@@ -12,26 +13,45 @@ hostips_hostports = {}
 remoteusernames_remoteuserpass = {}
 hostid_hostip_temp = {}
 only_hostips = []
+only_hostips_backup = []
 only_remoteusers = []
 
 def main(my_name):
     break_flag = False
-
+    global only_hostips
     # 清空主机列表，防止多次选择，列表数据重复
+
     only_hostips.clear()
-    list_hosts(my_name)
+    select_hosts(my_name)
+    #备份原始主机列表, 用于恢复
+    only_hostips_backup=only_hostips.copy()
+    def print_only_hostips():
+        for index, hostip in enumerate(only_hostips):
+            print([index], hostip)
+        print()
+
+    def print_only_remoteusers():
+        for index, remoteusername in enumerate(only_remoteusers):
+            print([index], remoteusername)
+        print()
+
     while True:
         try:
-            input_str = input('请选择主机编号, 输入q返回主菜单, 回车显示主机列表[ctrl+d退出登录]: ').strip()
+            if len(only_hostips) == 0:
+                print("\033[31;1m\n没有可登录的主机, 请联系管理员添加授权策略!\033[0m")
+            else:
+                print_only_hostips()
+            input_str = input('请选择主机编号, /跟部分ip进行搜索, 输入q返回主菜单, 回车显示主机列表, ctrl+d退出登录: ').strip()
             if input_str.isdigit():
                 if only_hostips[int(input_str)]:
                     # 清空用户列表，防止多次选择，列表数据重复
                     only_remoteusers.clear()
                     hostip_choice = only_hostips[int(input_str)]
-                    list_remoteusers(int(input_str))
+                    select_remoteusers(int(input_str))
+                    print_only_remoteusers()
                     while True:
                         try:
-                            input_str = input('请选择登录用户编号, 输入q返回主菜单[ctrl+d退出登录]: ').strip()
+                            input_str = input('请选择登录用户编号, 输入q返回主菜单, 回车显示远程用户列表, ctrl+d退出登录: ').strip()
                             if input_str.isdigit():
                                 if only_remoteusers[int(input_str)]:
                                     remoteusername_choice = only_remoteusers[int(input_str)]
@@ -41,32 +61,45 @@ def main(my_name):
                                 break_flag = True
                                 break
                             elif input_str == "":
-                                for index, remoteusername in enumerate(only_remoteusers):
-                                    print([index], remoteusername)
-                                print()
+                                print_only_remoteusers()
                             else:
-                                print('请输入登录用户编号!')
+                                print("\033[31;1m\n请输入登录用户编号!\033[0m")
                                 continue
                         except IndexError as e:
-                            print('登录用户编号输入有误, 请重新输入!')
+                            print("\033[31;1m\n登录用户编号输入有误, 请重新输入!\033[0m")
                             continue
             elif input_str == 'q':
                 break
+            elif input_str.startswith('/'):
+                only_hostips=only_hostips_backup.copy()
+                len_only_hostips=len(only_hostips)
+                input_str_remove_left_slash = input_str.lstrip('/')
+                if input_str_remove_left_slash != "":
+                    for hostip_re in only_hostips:
+                        re_result=re.search(input_str_remove_left_slash,hostip_re)
+                        if re_result:
+                            only_hostips.clear()
+                            only_hostips.append(hostip_re)
+                    if len(only_hostips) != len_only_hostips:
+                        continue
+                    else:
+                        print("\033[31;1m\n没有匹配到任何主机！\033[0m")
+                continue
             elif input_str == '':
-                for index, hostip in enumerate(only_hostips):
-                    print([index], hostip)
-                print('可登录' + str(len(only_hostips)) + '台主机')
-                print()
+                only_hostips = only_hostips_backup.copy()
+                continue
             else:
-                print('请输入主机编号!')
+                only_hostips = only_hostips_backup.copy()
+                print("\033[31;1m\n请输入主机编号!\033[0m")
                 continue
             if break_flag:
                 break
         except IndexError as e:
-            print('主机编号输入有误, 请重新输入!')
+            only_hostips = only_hostips_backup.copy()
+            print("\033[31;1m\n主机编号输入有误, 请重新输入!\033[0m")
             continue
 
-def list_hosts(my_name):
+def select_hosts(my_name):
     # 查找用户所包含的资产
     user_to_hostid_cursor = conn.execute(
         "select hostid,remoteuserid from authorization where userid in (select userid from users where username=%(username)s) and hostid is not null;",
@@ -132,12 +165,8 @@ def list_hosts(my_name):
             only_hostips.append(hostip)
 
     #print(only_hostips)
-    for index, hostip in enumerate(only_hostips):
-        print([index], hostip)
-    print('可登录' + str(len(only_hostips)) + '台主机')
-    print()
 
-def list_remoteusers(input_str):
+def select_remoteusers(input_str):
     for remoteuserid in list(set(hosts_remoteusers_all[hostid_hostip_temp[only_hostips[input_str]]])):
         remoteuserid_to_remoteusername = conn.execute(
             "select remoteuserid,remoteusername,remoteuserpass from remoteusers where remoteuserid=%(remoteuserid)s;",
@@ -148,9 +177,6 @@ def list_remoteusers(input_str):
             only_remoteusers.append(remoteusername)
 
     # print(only_remoteusers)
-    for index, remoteusername in enumerate(only_remoteusers):
-        print([index], remoteusername)
-    print()
 
 if __name__ == '__main__':
-    list_hosts('wsj')
+    select_hosts('wsj')

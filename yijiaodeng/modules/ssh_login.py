@@ -20,7 +20,7 @@ def ssh_login(username, hostip, hostport, remoteusername, remoteuserpass):
                        remoteuserpass,
                        timeout=30)
         chan = client.invoke_shell()
-        print('\033[33;1m*** 登录成功! ***\n\033[0m')
+        print("\033[33;1m*** " + remoteusername + "用户ssh登录成功! ***\n\033[0m")
         # auditlog.auditlog(datetime.datetime.now(), username, hostip, remoteusername, "登录成功!")
         auditlog_queue_producer.send(datetime.datetime.now(), username, hostip, remoteusername, "登录成功!")
         interactive.interactive_shell(chan, username, hostip, remoteusername)
