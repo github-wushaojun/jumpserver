@@ -71,7 +71,7 @@ def main(my_name):
                                 break_flag = True
                                 break
                             elif input_str == "":
-                                print_only_remoteusers()
+                                continue
                             else:
                                 print("\033[31;1m\n请输入登录用户编号!\033[0m")
                                 continue
@@ -82,18 +82,16 @@ def main(my_name):
                 break
             elif input_str.startswith('/'):
                 only_hostips=only_hostips_backup.copy()
-                len_only_hostips=len(only_hostips)
                 input_str_remove_left_slash = input_str.lstrip('/')
                 if input_str_remove_left_slash != "":
-                    for hostip_re in only_hostips:
+                    only_hostips.clear()
+                    for hostip_re in only_hostips_backup:
                         re_result=re.search(input_str_remove_left_slash,hostip_re)
                         if re_result:
-                            only_hostips.clear()
                             only_hostips.append(hostip_re)
-                    if len(only_hostips) != len_only_hostips:
-                        continue
-                    else:
+                    if len(only_hostips) == 0:
                         print("\033[31;1m\n没有匹配到任何主机！\033[0m")
+                        only_hostips = only_hostips_backup.copy()
                 continue
             elif input_str == '':
                 only_hostips = only_hostips_backup.copy()

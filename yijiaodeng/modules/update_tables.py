@@ -143,7 +143,6 @@ def create_users():
                             userid = select_users_table(v['username'])
                             if userid:
                                 print("\033[31;1m"+v['username'] + "(userid:" + str(userid) + ")" + " 已存在于users表, 无需添加!\033[0m")
-                                continue
                             else:
                                 if v.get('role'):
                                     if v['role'] == 'admin' or v['role'] == 'user':
@@ -243,7 +242,6 @@ def create_hosts():
                     hostid = select_hosts_table(v['hostip'])
                     if hostid:
                         print("\033[31;1m"+v['hostip'] + "(hostid:" + str(hostid) + ")" + " 已存在于hosts表, 无需添加!\033[0m")
-                        continue
                     else:
                         if v.get('hostport'):
                             insert_hosts_table(v['hostip'], v['hostport'])
@@ -292,7 +290,7 @@ def create_hstgrp():
             else:
                 insert_hstgrp_table(v['hstgrpname'])
                 hstgrpid = select_hstgrp_table(v['hstgrpname'])
-                print(v['group'] + '(hstgrpid:' + str(hstgrpid) + ')' + ' 添加成功!')
+                print(v['hstgrpname'] + '(hstgrpid:' + str(hstgrpid) + ')' + ' 添加成功!')
 
 def create_remoteusers():
     file_path = BASE_DIR + "/conf/db_tables_yaml/remoteusers.yaml"
