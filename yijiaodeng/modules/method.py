@@ -7,6 +7,7 @@ from modules import list_hosts_remoteusers
 from modules import update_tables
 import signal
 import hashlib
+import logging
 
 conn = conn_db_setting.engine.connect()
 
@@ -39,6 +40,17 @@ def pass_md5_calculate(password):
     m = hashlib.md5()
     m.update(password)
     return m.hexdigest()
+
+#暂时没有使用
+def log_file_record(log_file_name,log_content,log_level):
+    logger = logging.getLogger(log_file_name)
+    logger.setLevel(logging.DEBUG)
+    fh = logging.FileHandler('/tmp/'+log_file_name+'log')
+    fh.setLevel(log_level)
+    fh_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(message)s')
+    fh.setFormatter(fh_formatter)
+    logger.addHandler(fh)
+    logger.info(log_content)
 
 def login_check():
     while True:
