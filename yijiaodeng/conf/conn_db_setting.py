@@ -14,9 +14,9 @@ metadata = MetaData()
 users = Table('users', metadata,
         Column('userid', Integer, primary_key=True),
         Column('username', String(20), nullable=False),
-        Column('userpass', String(20), nullable=False),
+        Column('userpass', String(32), nullable=False),
         Column('role', Enum('admin','user'), nullable=False, server_default='user'),
-        Column('status', Enum('on','off'), nullable=False, server_default='on'),
+        Column('status', Enum('start','stop'), nullable=False, server_default='start'),
         UniqueConstraint('username')
     )
 
