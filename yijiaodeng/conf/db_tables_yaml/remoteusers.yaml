@@ -1,5 +1,5 @@
 
 
 remoteuser1:
-  remoteusername: hdfs
-  remoteuserpass: 123hdfs
+  remoteusername: sa
+  remoteuserpass: unknow

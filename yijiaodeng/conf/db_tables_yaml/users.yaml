@@ -16,20 +16,46 @@
 #  status: start
 #  usrgrpname: ceshi5
 
+
+
+user1:
+  username: wushaojun
+  userpass: wushaojun123
+  role: admin
+  status: start
+  usrgrpname: ops
+
 user2:
-  username: hello_user23
-  userpass: 1234567
+  username: wangyakun
+  userpass: wangyakun123
+  role: admin
+  status: start
+  usrgrpname: ops
+
+user3:
+  username: lixiao
+  userpass: lixiao123
   role: user
   status: start
-  usrgrpname: ceshi6
+  usrgrpname: ops
 
+user4:
+  username: zhangwenliang
+  userpass: zhangwenliang123
+  role: admin
+  status: start
+  usrgrpname: ops
 
+user5:
+  username: gaowei
+  userpass: gaowei123
+  role: admin
+  status: start
+  usrgrpname: dba
 
-
-#user2:
-#  username: gaowei
-#  userpass: 12345678
-
-#user3:
-#  username: wsj
-#  userpass: 12345678
+user6:
+  username: zhangyongcai
+  userpass: zhangyongcai123
+  role: user
+  status: start
+  usrgrpname: dba

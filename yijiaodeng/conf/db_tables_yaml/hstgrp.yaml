@@ -1,3 +1,7 @@
 
 group1:
-  hstgrpname: licai2
+  hstgrpname: mjq_lvs
+
+group2:
+  hstgrpname: mjq_mysql
+

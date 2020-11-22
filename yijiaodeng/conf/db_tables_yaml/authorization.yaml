@@ -9,7 +9,17 @@
 #  remoteusername: hdfs
 
 auth1:
-  authorizationname: authwsj7
+  authorizationname: authops_mjq_lvs
   usrgrpname: ops
-  hstgrpname: puhui
-  remoteusername: root
+  hstgrpname: mjq_lvs
+  remoteusername: sa
+auth2:
+  authorizationname: authops_mjq_mysql
+  usrgrpname: ops
+  hstgrpname: mjq_mysql
+  remoteusername: sa
+auth3:
+  authorizationname: authdba_mjq_mysql
+  usrgrpname: dba
+  hstgrpname: mjq_mysql
+  remoteusername: sa

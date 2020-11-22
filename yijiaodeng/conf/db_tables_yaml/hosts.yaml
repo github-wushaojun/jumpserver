@@ -1,6 +1,66 @@
 #注: hostport字段不设置, 默认端口是22
 
 host1:
-  hostip: 192.168.1.104
-  hstgrpname: licai2
+  hostip: 10.13.30.11
+  hstgrpname: mjq_lvs
+  hostport: 22222
+host2:
+  hostip: 10.13.30.12
+  hstgrpname: mjq_lvs
+  hostport: 22222
+host3:
+  hostip: 10.13.30.71
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host4:
+  hostip: 10.13.30.71
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host5:
+  hostip: 10.13.30.72
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host6:
+  hostip: 10.13.30.73
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host7:
+  hostip: 10.13.30.74
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host8:
+  hostip: 10.13.30.75
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host9:
+  hostip: 10.13.30.76
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host10:
+  hostip: 10.13.30.77
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host11:
+  hostip: 10.13.30.78
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host12:
+  hostip: 10.13.30.79
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host13:
+  hostip: 10.13.30.80
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host14:
+  hostip: 10.13.30.81
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host15:
+  hostip: 10.13.30.82
+  hstgrpname: mjq_mysql
+  hostport: 22222
+host16:
+  hostip: 10.13.30.83
+  hstgrpname: mjq_mysql
   hostport: 22222

@@ -1,3 +1,6 @@
 
 group1:
-  usrgrpname: ceshi6
+  usrgrpname: ops
+
+group2:
+  usrgrpname: dba
