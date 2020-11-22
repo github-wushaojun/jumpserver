@@ -85,6 +85,7 @@ def main(my_name):
                             only_hostips = only_hostips_backup.copy()
                 except Exception as e:
                     print("\033[31;1m\n搜索时请输入和ip相关的字符!\033[0m")
+                    only_hostips = only_hostips_backup.copy()
                 continue
             elif input_str == '':
                 only_hostips = only_hostips_backup.copy()
