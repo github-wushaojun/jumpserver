@@ -8,6 +8,7 @@ from modules import update_tables
 import signal
 import hashlib
 import logging
+import os
 
 conn = conn_db_setting.engine.connect()
 
@@ -74,7 +75,7 @@ def login_check():
                 continue
         except EOFError as e:
             print("\033[31;1m\n已退出登录!\n\033[0m")
-            continue
+            os._exit(0)
 
 def function_menu_choice(my_name,role,status):
         while True:
