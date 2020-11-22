@@ -71,17 +71,20 @@ def main(my_name):
             elif input_str == 'q':
                 break
             elif input_str.startswith('/'):
-                only_hostips=only_hostips_backup.copy()
-                input_str_remove_left_slash = input_str.lstrip('/')
-                if input_str_remove_left_slash != "":
-                    only_hostips.clear()
-                    for hostip_re in only_hostips_backup:
-                        re_result=re.search(input_str_remove_left_slash,hostip_re)
-                        if re_result:
-                            only_hostips.append(hostip_re)
-                    if len(only_hostips) == 0:
-                        print("\033[31;1m\n没有匹配到任何主机！\033[0m")
-                        only_hostips = only_hostips_backup.copy()
+                try:
+                    only_hostips=only_hostips_backup.copy()
+                    input_str_remove_left_slash = input_str.lstrip('/')
+                    if input_str_remove_left_slash != "":
+                        only_hostips.clear()
+                        for hostip_re in only_hostips_backup:
+                            re_result=re.search(input_str_remove_left_slash,hostip_re)
+                            if re_result:
+                                only_hostips.append(hostip_re)
+                        if len(only_hostips) == 0:
+                            print("\033[31;1m\n没有匹配到任何主机！\033[0m")
+                            only_hostips = only_hostips_backup.copy()
+                except Exception as e:
+                    print("\033[31;1m\n搜索时请输入和ip相关的字符!\033[0m")
                 continue
             elif input_str == '':
                 only_hostips = only_hostips_backup.copy()
