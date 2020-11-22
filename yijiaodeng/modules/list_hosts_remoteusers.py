@@ -55,17 +55,7 @@ def main(my_name):
                             if input_str.isdigit():
                                 if only_remoteusers[int(input_str)]:
                                     remoteusername_choice = only_remoteusers[int(input_str)]
-                                    auth_choice=input('auth by (p)assword, (k)ey? [默认p]: ')
-                                    if auth_choice != 'k':
-                                        auth_choice = 'p'
-                                        private_key_path=''
-                                    else:
-                                        login_user = os.getlogin()
-                                        private_key_path='/' + login_user + '/.ssh/id_rsa'
-                                        if not os.path.isfile(private_key_path):
-                                            print("\033[31;1m\n私钥文件不存在, 请通过密码方式登录!\033[0m")
-                                            continue
-                                    ssh_login.ssh_login(auth_choice, private_key_path, my_name, hostip_choice,hostips_hostports[hostip_choice],remoteusername_choice,remoteusernames_remoteuserpass[remoteusername_choice])
+                                    ssh_login.ssh_login(my_name, hostip_choice, hostips_hostports[hostip_choice], remoteusername_choice,remoteusernames_remoteuserpass[remoteusername_choice])
                                     break
                             elif input_str == 'q':
                                 break_flag = True

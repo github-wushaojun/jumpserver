@@ -3,3 +3,7 @@
 remoteuser1:
   remoteusername: sa
   remoteuserpass: unknow
+
+remoteuser2:
+  remoteusername: mysql
+  remoteuserpass: 123mysql

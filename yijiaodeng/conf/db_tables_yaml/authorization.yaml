@@ -23,3 +23,8 @@ auth3:
   usrgrpname: dba
   hstgrpname: mjq_mysql
   remoteusername: sa
+auth4:
+  authorizationname: wushaojun_192.168.1.252
+  username: wushaojun
+  hostip: 192.168.1.252
+  remoteusername: mysql

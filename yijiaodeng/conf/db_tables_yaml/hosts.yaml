@@ -1,4 +1,5 @@
-#注: hostport字段不设置, 默认端口是22
+#注1: hostport字段不设置, 默认端口是22
+#注2: hstgrpname主机组可以不指定, 也就是该主机不属于任何主机组
 
 host1:
   hostip: 10.13.30.11
@@ -59,4 +60,9 @@ host14:
 host15:
   hostip: 10.13.30.83
   hstgrpname: mjq_mysql
+  hostport: 22222
+
+########################
+host16:
+  hostip: 192.168.1.252
   hostport: 22222
