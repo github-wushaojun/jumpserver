@@ -8,27 +8,28 @@ import datetime
 from paramiko.py3compat import u
 from modules import auditlog
 from modules import auditlog_queue_producer
-
+import os
 
 # windows does not have termios...
 try:
     import termios
     import tty
+
     has_termios = True
 except ImportError:
     has_termios = False
 
 
-def interactive_shell(chan,username,hostip,remoteusername):
+def interactive_shell(chan, username, hostip, remoteusername):
     if has_termios:
-        posix_shell(chan,username,hostip,remoteusername)
+        posix_shell(chan, username, hostip, remoteusername)
     else:
         windows_shell(chan)
 
 
-def posix_shell(chan,username,hostip,remoteusername):
+def posix_shell(chan, username, hostip, remoteusername):
     import select
-    
+
     oldtty = termios.tcgetattr(sys.stdin)
     try:
         tty.setraw(sys.stdin.fileno())
@@ -55,7 +56,8 @@ def posix_shell(chan,username,hostip,remoteusername):
                 except socket.timeout:
                     pass
             if sys.stdin in r:
-                x = sys.stdin.read(1)
+                #这里不能直接用sys.stdin.read(1), 上下键选择的历史命令执行会错位
+                x = (os.read(sys.stdin.fileno(), 4096)).decode()
                 if x != '\r':
                     cmd.append(x)
                 else:
@@ -63,7 +65,6 @@ def posix_shell(chan,username,hostip,remoteusername):
                     if cmd_str != "":
                         #auditlog.auditlog(datetime.datetime.now(), username, hostip, remoteusername, cmd_str)
                         auditlog_queue_producer.send(datetime.datetime.now(), username, hostip, remoteusername, cmd_str)
-                    # print('cmd->:',cmd_str)
                     cmd.clear()
                 if x == '\t':
                     tab_key = True
@@ -73,13 +74,13 @@ def posix_shell(chan,username,hostip,remoteusername):
     finally:
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
 
-    
+
 # thanks to Mike Looijmans for this code
 def windows_shell(chan):
     import threading
 
     sys.stdout.write("Line-buffered terminal emulation. Press F6 or ^Z to send EOF.\r\n\r\n")
-        
+
     def writeall(sock):
         while True:
             data = sock.recv(256)
@@ -89,10 +90,10 @@ def windows_shell(chan):
                 break
             sys.stdout.write(data)
             sys.stdout.flush()
-        
+
     writer = threading.Thread(target=writeall, args=(chan,))
     writer.start()
-        
+
     try:
         while True:
             d = sys.stdin.read(1)

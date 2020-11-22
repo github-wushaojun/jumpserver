@@ -19,6 +19,7 @@ def ssh_login(username, hostip, hostport, remoteusername, remoteuserpass):
                        remoteusername,
                        remoteuserpass,
                        timeout=30)
+        client.get_transport().open_session().get_pty()
         chan = client.invoke_shell()
         print("\033[33;1m*** " + remoteusername + "用户ssh登录成功! ***\n\033[0m")
         # auditlog.auditlog(datetime.datetime.now(), username, hostip, remoteusername, "登录成功!")

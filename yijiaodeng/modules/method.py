@@ -12,20 +12,21 @@ conn = conn_db_setting.engine.connect()
 continue_flag = False
 
 def func_role_print(my_name,role):
+    print("\033[34;1m\n欢迎 %s 登录一脚登跳板机, 请开始你的表演！\033[0m" %(my_name))
     if role == 'admin':
         print('''
-[1] 查看%s用户可登录的所有主机列表
-[2] 添加用户
-[3] 添加用户组
-[4] 添加主机
-[5] 添加主机组
-[6] 添加远程用户
-[7] 添加授权策略
-    ''' %(my_name))
+        [1] 查看可登录的所有主机列表
+        [2] 添加用户
+        [3] 添加用户组
+        [4] 添加主机
+        [5] 添加主机组
+        [6] 添加远程用户
+        [7] 添加授权策略
+        ''')
     elif role == 'user':
         print('''
-[1] 查看%s用户可登录的所有主机列表
-    ''' %(my_name))
+        [1] 查看可登录的所有主机列表
+        ''')
 
 def signal_all(*args):
     def handler(signal, frame):

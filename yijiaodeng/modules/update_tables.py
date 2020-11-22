@@ -132,7 +132,6 @@ def create_users():
     file_path=BASE_DIR+"/conf/db_tables_yaml/users.yaml"
     with open(file_path,'r') as users_yaml_file:
         data=yaml.load(users_yaml_file, Loader=yaml.FullLoader)
-    print(data)
     if data:
             for k,v in data.items():
                 print('----------')
