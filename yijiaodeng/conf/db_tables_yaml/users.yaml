@@ -17,8 +17,8 @@
 #  usrgrpname: ceshi5
 
 user2:
-  username: hello_user6
-  userpass: 123456
+  username: hello_user23
+  userpass: 1234567
   role: user
   status: start
   usrgrpname: ceshi6

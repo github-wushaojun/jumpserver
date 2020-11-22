@@ -5,6 +5,7 @@
 import os
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 import yaml
+from modules import method
 from conf import conn_db_setting
 
 conn = conn_db_setting.engine.connect()
@@ -135,6 +136,7 @@ def create_users():
     if data:
             for k,v in data.items():
                 print('----------')
+                v['userpass'] = method.pass_md5_calculate(bytes(str(v['userpass']),encoding='utf-8'))
                 if v.get('usrgrpname'):
                         usrgrpid=select_usrgrp_table(v['usrgrpname'])
                         if usrgrpid:

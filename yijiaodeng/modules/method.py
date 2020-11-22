@@ -6,6 +6,7 @@ from conf import conn_db_setting
 from modules import list_hosts_remoteusers
 from modules import update_tables
 import signal
+import hashlib
 
 conn = conn_db_setting.engine.connect()
 
@@ -34,16 +35,22 @@ def signal_all(*args):
     for s in args:
         signal.signal(s, handler)
 
+def pass_md5_calculate(password):
+    m = hashlib.md5()
+    m.update(password)
+    return m.hexdigest()
+
 def login_check():
     while True:
         signal_all(signal.SIGQUIT, signal.SIGINT, signal.SIGTSTP)
         try:
             my_name = input("\033[32;1m请输入用户名: \033[0m").strip()
             my_pass = input("\033[32;1m请输入密码: \033[0m").strip()
+            my_pass_md5_result=pass_md5_calculate(bytes(my_pass,encoding='utf-8'))
 
             # 查找用户是否存在
             find_cursor = conn.execute(
-                "select username,userpass,role,status from users where username=%(username)s and userpass=%(userpass)s;", username=my_name,userpass=my_pass
+                "select username,userpass,role,status from users where username=%(username)s and userpass=%(userpass)s;", username=my_name,userpass=my_pass_md5_result
             )
             find_result = find_cursor.fetchall()
             if find_result:
