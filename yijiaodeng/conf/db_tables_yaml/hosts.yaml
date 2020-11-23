@@ -66,3 +66,15 @@ host15:
 host16:
   hostip: 192.168.1.252
   hostport: 22222
+host17:
+  hostip: 172.16.3.112
+  hostport: 22222
+  hstgrpname: fz_ceshi
+host18:
+  hostip: 172.16.3.113
+  hostport: 22222
+  hstgrpname: fz_ceshi
+host19:
+  hostip: 172.16.3.135
+  hostport: 22222
+  hstgrpname: fz_ceshi

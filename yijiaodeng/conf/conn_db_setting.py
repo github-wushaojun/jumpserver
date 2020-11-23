@@ -3,6 +3,10 @@
 # __author__ = "wushaojun"
 
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, DateTime, ForeignKey, Enum, UniqueConstraint
+import os,sys
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
+from modules import method
 
 # 连接数据库
 engine = create_engine("mysql+pymysql://root:12345678@127.0.0.1:3306/yijiaodeng?charset=utf8", encoding='utf-8', echo=False)
@@ -88,3 +92,7 @@ auditlog = Table('auditlog', metadata,
 if __name__ == "__main__":
         # 创建数据表，如果数据表存在，则忽视
         metadata.create_all(engine)
+        conn = engine.connect()
+        conn.execute(
+        "insert into users(username,userpass,role,status)values(%(username)s,%(userpass)s,%(role)s,%(status)s)",username='admin', userpass=method.pass_md5_calculate(b'admin'), role='admin', status='start'
+        )

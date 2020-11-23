@@ -5,3 +5,6 @@ group1:
 group2:
   hstgrpname: mjq_mysql
 
+group3:
+  hstgrpname: fz_ceshi
+

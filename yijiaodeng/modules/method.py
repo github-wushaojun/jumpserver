@@ -104,7 +104,7 @@ def function_menu_choice(my_name,role,status):
                             print("\033[31;1m编号输入有误!\033[0m")
                             continue
                     else:
-                        print("\033[31;1m请输入数字！\033[0m")
+                        print("\033[31;1m请输入数字编号！\033[0m")
                         continue
                 elif role == 'user':
                     func_choice = input('请选择功能, ctrl+d退出登录: ').strip()

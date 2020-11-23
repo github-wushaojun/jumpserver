@@ -7,3 +7,11 @@ remoteuser1:
 remoteuser2:
   remoteusername: mysql
   remoteuserpass: 123mysql
+
+remoteuser3:
+  remoteusername: root
+  remoteuserpass: wsj123abc...
+
+remoteuser4:
+  remoteusername: linshi
+  remoteuserpass: 123456

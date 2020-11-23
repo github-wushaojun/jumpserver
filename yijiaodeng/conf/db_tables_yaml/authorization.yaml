@@ -24,7 +24,23 @@ auth3:
   hstgrpname: mjq_mysql
   remoteusername: sa
 auth4:
-  authorizationname: wushaojun_192.168.1.252
+  authorizationname: wushaojun_192.168.1.
   username: wushaojun
   hostip: 192.168.1.252
   remoteusername: mysql
+auth5:
+  authorizationname: wangyakun_fz_ceshi
+  username: wangyakun
+  hstgrpname: fz_ceshi
+  remoteusername: root
+auth6:
+  authorizationname: wangyakun_fz_ceshi2
+  username: wangyakun
+  hstgrpname: fz_ceshi
+  remoteusername: linshi
+
+auth7:
+  authorizationname: 测试中文
+  username: wushaojun
+  hstgrpname: fz_ceshi
+  remoteusername: linshi

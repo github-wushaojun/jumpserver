@@ -47,12 +47,8 @@ def posix_shell(chan, username, hostip, remoteusername):
                             cmd.append(x)
                         tab_key = False
                     if len(x) == 0:
-                        sys.stdout.write("\033[31;1m\r\n已退出" + remoteusername + "用户ssh登录!\r\n\033[0m")
-                        try:
-                            auditlog_queue_producer.send(datetime.datetime.now(), username, hostip, remoteusername, "退出登录!")
-                        except Exception as e:
-                            #print('用户行为审计写入队列异常, 请检查队列服务器是否能够连接成功')
-                            pass
+                        sys.stdout.write("\033[31;1m\r\n已退出" + remoteusername + "用户ssh登录!\r\n\n\033[0m")
+                        auditlog_queue_producer.send(datetime.datetime.now(), username, hostip, remoteusername, "退出登录!")
                         # auditlog.auditlog(datetime.datetime.now(), username, hostip, remoteusername,"退出登录!")
                         break
                     sys.stdout.write(x)
@@ -60,6 +56,7 @@ def posix_shell(chan, username, hostip, remoteusername):
                 except socket.timeout:
                     pass
             if sys.stdin in r:
+                #这里不能直接用sys.stdin.read(1), 上下键选择的历史命令执行会错位
                 x = (os.read(sys.stdin.fileno(), 4096)).decode()
                 if x != '\r':
                     cmd.append(x)
@@ -67,19 +64,13 @@ def posix_shell(chan, username, hostip, remoteusername):
                     cmd_str=''.join(cmd)
                     if cmd_str != "":
                         #auditlog.auditlog(datetime.datetime.now(), username, hostip, remoteusername, cmd_str)
-                        try:
-                            auditlog_queue_producer.send(datetime.datetime.now(), username, hostip, remoteusername, cmd_str)
-                        except Exception as e:
-                            #print('用户行为审计写入队列异常, 请检查队列服务器是否能够连接成功')
-                            pass
+                        auditlog_queue_producer.send(datetime.datetime.now(), username, hostip, remoteusername, cmd_str)
                     cmd.clear()
                 if x == '\t':
                     tab_key = True
                 if len(x) == 0:
                     break
                 chan.send(x)
-    except Exception as e:
-        print(e)
     finally:
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
 
