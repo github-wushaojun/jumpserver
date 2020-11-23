@@ -27,12 +27,12 @@ def main(my_name):
     only_hostips_backup=only_hostips.copy()
     def print_only_hostips():
         for index, hostip in enumerate(only_hostips):
-            print([index], hostip)
+            print('[{:<{len}}] {}'.format(index, hostip, len=len(str(len(only_hostips) - 1))))
         print()
 
     def print_only_remoteusers():
         for index, remoteusername in enumerate(only_remoteusers):
-            print([index], remoteusername)
+            print('[{:<{len}}] {}'.format(index, remoteusername, len=len(str(len(only_remoteusers) - 1))))
         print()
 
     while True:

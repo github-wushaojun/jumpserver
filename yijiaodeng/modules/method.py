@@ -5,26 +5,26 @@
 from conf import conn_db_setting
 from modules import list_hosts_remoteusers
 from modules import update_tables
-import signal
-import hashlib
-import logging
-import os
+import signal,hashlib,logging,os,getpass
 
 conn = conn_db_setting.engine.connect()
 
 continue_flag = False
 
-def func_role_print(my_name,role):
-    print("\033[34;1m\n欢迎 %s 登录一脚登跳板机, 请开始你的表演！\033[0m" %(my_name))
+def func_print_banner():
+    print("\033[34;1m\n***** 欢迎使用一脚登跳板机 *****\033[0m")
+
+def func_role_print(role):
+    func_print_banner()
     if role == 'admin':
         print('''
-        [1] 查看可登录的所有主机列表
-        [2] 添加用户
-        [3] 添加用户组
-        [4] 添加主机
-        [5] 添加主机组
-        [6] 添加远程用户
-        [7] 添加授权策略
+        [1]> 查看可登录的所有主机列表
+        [2]> 添加用户
+        [3]> 添加用户组
+        [4]> 添加主机
+        [5]> 添加主机组
+        [6]> 添加远程用户
+        [7]> 添加授权策略
         ''')
     elif role == 'user':
         print('''
@@ -54,11 +54,12 @@ def log_file_record(log_file_name,log_content,log_level):
     logger.info(log_content)
 
 def login_check():
+    func_print_banner()
     while True:
         signal_all(signal.SIGQUIT, signal.SIGINT, signal.SIGTSTP)
         try:
-            my_name = input("\033[32;1m请输入用户名: \033[0m").strip()
-            my_pass = input("\033[32;1m请输入密码: \033[0m").strip()
+            my_name = input('请输入用户名: ').strip()
+            my_pass = getpass.getpass('请输入密码: ').strip()
             my_pass_md5_result=pass_md5_calculate(bytes(my_pass,encoding='utf-8'))
 
             # 查找用户是否存在
@@ -67,6 +68,7 @@ def login_check():
             )
             find_result = find_cursor.fetchall()
             if find_result:
+                print("\033[33;1m%s 登录成功, 请开始你的表演!\n\033[0m" %my_name)
                 function_menu_choice(my_name, find_result[0][2], find_result[0][3])
                 if continue_flag == True:
                     continue
@@ -80,7 +82,7 @@ def login_check():
 def function_menu_choice(my_name,role,status):
         while True:
             if status == 'start':
-                func_role_print(my_name, role)
+                func_role_print(role)
                 if role == 'admin':
                     func_choice = input('请选择功能, ctrl+d退出登录: ').strip()
                     if func_choice.isdigit():
