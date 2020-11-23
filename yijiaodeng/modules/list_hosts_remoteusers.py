@@ -41,7 +41,7 @@ def main(my_name):
                 print("\033[31;1m\n没有可登录的主机, 请联系管理员添加授权策略!\033[0m")
             else:
                 print_only_hostips()
-            input_str = input('请选择主机编号, /跟部分ip进行搜索, 输入q返回主菜单, 回车显示主机列表, ctrl+d退出登录: ').strip()
+            input_str = input('请选择主机编号, /跟部分字符搜索匹配的ip(支持正则), 输入q返回主菜单, 回车显示主机列表, ctrl+d退出登录: ').strip()
             if input_str.isdigit():
                 if only_hostips[int(input_str)]:
                     # 清空用户列表，防止多次选择，列表数据重复

@@ -2,8 +2,6 @@
 # -*- coding:utf-8 -*-
 # __author__ = "wushaojun"
 
-import os, sys
-
 from conf import conn_db_setting
 
 conn = conn_db_setting.engine.connect()
