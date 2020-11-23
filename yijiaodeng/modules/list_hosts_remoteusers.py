@@ -4,7 +4,7 @@
 
 from conf import conn_db_setting
 from modules import ssh_login
-import re,os
+import re
 
 conn = conn_db_setting.engine.connect()
 

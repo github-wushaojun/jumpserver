@@ -136,7 +136,7 @@ def create_users():
     if data:
             for k,v in data.items():
                 print('----------')
-                if len(v['username']) > 20 or len(v['userpass']) > 20:
+                if len(str(v['username'])) > 20 or len(str(v['userpass'])) > 20:
                     print('用户名和密码长度不能大于20个字符, 请检查'+v['username']+'和'+v['userpass']+'的长度!')
                     continue
                 else:
@@ -224,7 +224,7 @@ def create_usrgrp():
     if data:
         for k,v in data.items():
             print('----------')
-            if len(v['usrgrpname']) > 20:
+            if len(str(v['usrgrpname'])) > 20:
                 print('用户组名长度不能大于20个字符, 请检查' + v['usrgrpname'] + '的长度!')
                 continue
             else:
@@ -291,7 +291,7 @@ def create_hstgrp():
     if data:
         for k,v in data.items():
             print('----------')
-            if len(v['hstgrpname']) > 20:
+            if len(str(v['hstgrpname'])) > 20:
                 print('主机组名长度不能大于20个字符, 请检查' + v['hstgrpname'] + '的长度!')
                 continue
             else:
@@ -311,7 +311,7 @@ def create_remoteusers():
     if data:
         for k,v in data.items():
             print('----------')
-            if len(v['remoteusername']) > 20 or len(v['remoteuserpass']) > 20:
+            if len(str(v['remoteusername'])) > 20 or len(str(v['remoteuserpass'])) > 20:
                 print('远程用户名和密码长度不能大于20个字符, 请检查' + v['remoteusername'] + '和' + v['remoteuserpass'] + '的长度!')
                 continue
             else:
@@ -330,7 +330,7 @@ def create_authorization():
     if data:
         for k,v in data.items():
             print('----------')
-            if len(v['authorizationname']) > 20:
+            if len(str(v['authorizationname'])) > 20:
                 print('策略名长度不能大于20个字符, 请检查' + v['authorizationname'] + '的长度!')
                 continue
             else:
