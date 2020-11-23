@@ -136,82 +136,86 @@ def create_users():
     if data:
             for k,v in data.items():
                 print('----------')
-                v['userpass'] = method.pass_md5_calculate(bytes(str(v['userpass']),encoding='utf-8'))
-                if v.get('usrgrpname'):
-                        usrgrpid=select_usrgrp_table(v['usrgrpname'])
-                        if usrgrpid:
-                            userid = select_users_table(v['username'])
-                            if userid:
-                                print("\033[31;1m"+v['username'] + "(userid:" + str(userid) + ")" + " 已存在于users表, 无需添加!\033[0m")
-                            else:
-                                if v.get('role'):
-                                    if v['role'] == 'admin' or v['role'] == 'user':
+                if len(v['username']) > 20 or len(v['userpass']) > 20:
+                    print('用户名和密码长度不能大于20个字符, 请检查'+v['username']+'和'+v['userpass']+'的长度!')
+                    continue
+                else:
+                    v['userpass'] = method.pass_md5_calculate(bytes(str(v['userpass']),encoding='utf-8'))
+                    if v.get('usrgrpname'):
+                            usrgrpid=select_usrgrp_table(v['usrgrpname'])
+                            if usrgrpid:
+                                userid = select_users_table(v['username'])
+                                if userid:
+                                    print("\033[31;1m"+v['username'] + "(userid:" + str(userid) + ")" + " 已存在于users表, 无需添加!\033[0m")
+                                else:
+                                    if v.get('role'):
+                                        if v['role'] == 'admin' or v['role'] == 'user':
+                                            if v.get('status'):
+                                                if v['status'] == 'start' or v['status'] == 'stop':
+                                                    insert_users_table(username=v['username'],userpass=v['userpass'],role=v['role'],status=v['status'])
+                                                else:
+                                                    print("\033[31;1m" + v['username'] + "指定了" + "未知的状态" + v['status'] + ", 请修改后重新添加!\033[0m")
+                                                    continue
+                                            else:
+                                                insert_users_table(username=v['username'], userpass=v['userpass'], role=v['role'])
+                                        else:
+                                            print("\033[31;1m"+v['username'] + "指定了" + "未知的角色" + v['role'] + ", 请修改后重新添加!\033[0m")
+                                            continue
+                                    else:
                                         if v.get('status'):
                                             if v['status'] == 'start' or v['status'] == 'stop':
-                                                insert_users_table(username=v['username'],userpass=v['userpass'],role=v['role'],status=v['status'])
+                                                insert_users_table(username=v['username'], userpass=v['userpass'], status=v['status'])
                                             else:
                                                 print("\033[31;1m" + v['username'] + "指定了" + "未知的状态" + v['status'] + ", 请修改后重新添加!\033[0m")
                                                 continue
                                         else:
-                                            insert_users_table(username=v['username'], userpass=v['userpass'], role=v['role'])
-                                    else:
-                                        print("\033[31;1m"+v['username'] + "指定了" + "未知的角色" + v['role'] + ", 请修改后重新添加!\033[0m")
-                                        continue
+                                            insert_users_table(username=v['username'], userpass=v['userpass'])
+                                    userid = select_users_table(v['username'])
+                                    print(v['username'] + '(userid:' + str(userid) + ')' + ' 添加成功!')
+                                result=select_users_groups_table(userid,usrgrpid)
+                                if result:
+                                    print("\033[31;1muserid: " + str(userid) + "(username: " + v[
+                                        'username'] + ")" + " 关联 " + "usrgrpid: " + str(usrgrpid) + "(usrgrpname: " + v[
+                                              'usrgrpname'] + ")" + " 已存在于users_groups表, 无需添加!\033[0m")
+                                    continue
                                 else:
+                                    insert_users_groups_table(userid,usrgrpid)
+                                    print('userid: ' + str(userid) + '(username: ' + v['username'] + ')' +
+                                      ' 关联 ' + 'usrgrpid: ' + str(usrgrpid) + '(usrgrpname: ' +
+                                      v['usrgrpname'] + ')' + ' 成功!')
+                            else:
+                                print("\033[31;1m创建"+v['username']+"时 "+v['usrgrpname']+" 组不存在, 请先创建该组!\033[0m")
+                                continue
+                    else:
+                        userid = select_users_table(v['username'])
+                        if userid:
+                            print("\033[31;1m"+v['username'] + "(userid:" + str(userid) + ")" + " 已存在于users表, 无需添加!\033[0m")
+                            continue
+                        else:
+                            if v.get('role'):
+                                if v['role'] == 'admin' or v['role'] == 'user':
                                     if v.get('status'):
                                         if v['status'] == 'start' or v['status'] == 'stop':
-                                            insert_users_table(username=v['username'], userpass=v['userpass'], status=v['status'])
+                                            insert_users_table(username=v['username'], userpass=v['userpass'],role=v['role'], status=v['status'])
                                         else:
                                             print("\033[31;1m" + v['username'] + "指定了" + "未知的状态" + v['status'] + ", 请修改后重新添加!\033[0m")
                                             continue
                                     else:
-                                        insert_users_table(username=v['username'], userpass=v['userpass'])
-                                userid = select_users_table(v['username'])
-                                print(v['username'] + '(userid:' + str(userid) + ')' + ' 添加成功!')
-                            result=select_users_groups_table(userid,usrgrpid)
-                            if result:
-                                print("\033[31;1muserid: " + str(userid) + "(username: " + v[
-                                    'username'] + ")" + " 关联 " + "usrgrpid: " + str(usrgrpid) + "(usrgrpname: " + v[
-                                          'usrgrpname'] + ")" + " 已存在于users_groups表, 无需添加!\033[0m")
-                                continue
+                                        insert_users_table(username=v['username'], userpass=v['userpass'], role=v['role'])
+                                else:
+                                    print("\033[31;1m" + v['username'] + "指定了" + "未知的角色" + v['role'] + ", 请修改后重新添加!\033[0m")
+                                    continue
                             else:
-                                insert_users_groups_table(userid,usrgrpid)
-                                print('userid: ' + str(userid) + '(username: ' + v['username'] + ')' +
-                                  ' 关联 ' + 'usrgrpid: ' + str(usrgrpid) + '(usrgrpname: ' +
-                                  v['usrgrpname'] + ')' + ' 成功!')
-                        else:
-                            print("\033[31;1m创建"+v['username']+"时 "+v['usrgrpname']+" 组不存在, 请先创建该组!\033[0m")
-                            continue
-                else:
-                    userid = select_users_table(v['username'])
-                    if userid:
-                        print("\033[31;1m"+v['username'] + "(userid:" + str(userid) + ")" + " 已存在于users表, 无需添加!\033[0m")
-                        continue
-                    else:
-                        if v.get('role'):
-                            if v['role'] == 'admin' or v['role'] == 'user':
                                 if v.get('status'):
                                     if v['status'] == 'start' or v['status'] == 'stop':
-                                        insert_users_table(username=v['username'], userpass=v['userpass'],role=v['role'], status=v['status'])
+                                        insert_users_table(username=v['username'], userpass=v['userpass'],status=v['status'])
                                     else:
                                         print("\033[31;1m" + v['username'] + "指定了" + "未知的状态" + v['status'] + ", 请修改后重新添加!\033[0m")
                                         continue
                                 else:
-                                    insert_users_table(username=v['username'], userpass=v['userpass'], role=v['role'])
-                            else:
-                                print("\033[31;1m" + v['username'] + "指定了" + "未知的角色" + v['role'] + ", 请修改后重新添加!\033[0m")
-                                continue
-                        else:
-                            if v.get('status'):
-                                if v['status'] == 'start' or v['status'] == 'stop':
-                                    insert_users_table(username=v['username'], userpass=v['userpass'],status=v['status'])
-                                else:
-                                    print("\033[31;1m" + v['username'] + "指定了" + "未知的状态" + v['status'] + ", 请修改后重新添加!\033[0m")
-                                    continue
-                            else:
-                                insert_users_table(username=v['username'], userpass=v['userpass'])
-                        userid = select_users_table(v['username'])
-                        print(v['username'] + '(userid:' + str(userid) + ')' + ' 添加成功!')
+                                    insert_users_table(username=v['username'], userpass=v['userpass'])
+                            userid = select_users_table(v['username'])
+                            print(v['username'] + '(userid:' + str(userid) + ')' + ' 添加成功!')
 
 def create_usrgrp():
     file_path=BASE_DIR+"/conf/db_tables_yaml/usrgrp.yaml"
@@ -220,14 +224,18 @@ def create_usrgrp():
     if data:
         for k,v in data.items():
             print('----------')
-            usrgrpid=select_usrgrp_table(v['usrgrpname'])
-            if usrgrpid:
-                print("\033[31;1m"+v['usrgrpname'] + "(usrgrpid:" + str(usrgrpid) + ")" + " 已存在于usrgrp表, 无需添加!\033[0m")
+            if len(v['usrgrpname']) > 20:
+                print('用户组名长度不能大于20个字符, 请检查' + v['usrgrpname'] + '的长度!')
                 continue
             else:
-                insert_usrgrp_table(v['usrgrpname'])
-                usrgrpid = select_usrgrp_table(v['usrgrpname'])
-                print(v['usrgrpname'] + '(usrgrpid:' + str(usrgrpid) + ')' + ' 添加成功!')
+                usrgrpid=select_usrgrp_table(v['usrgrpname'])
+                if usrgrpid:
+                    print("\033[31;1m"+v['usrgrpname'] + "(usrgrpid:" + str(usrgrpid) + ")" + " 已存在于usrgrp表, 无需添加!\033[0m")
+                    continue
+                else:
+                    insert_usrgrp_table(v['usrgrpname'])
+                    usrgrpid = select_usrgrp_table(v['usrgrpname'])
+                    print(v['usrgrpname'] + '(usrgrpid:' + str(usrgrpid) + ')' + ' 添加成功!')
 
 def create_hosts():
     file_path=BASE_DIR+"/conf/db_tables_yaml/hosts.yaml"
@@ -283,14 +291,18 @@ def create_hstgrp():
     if data:
         for k,v in data.items():
             print('----------')
-            hstgrpid=select_hstgrp_table(v['hstgrpname'])
-            if hstgrpid:
-                print("\033[31;1m"+v['hstgrpname'] + "(hstgrpid:" + str(hstgrpid) + ")" + " 已存在于hstgrp表, 无需添加!\033[0m")
+            if len(v['hstgrpname']) > 20:
+                print('主机组名长度不能大于20个字符, 请检查' + v['hstgrpname'] + '的长度!')
                 continue
             else:
-                insert_hstgrp_table(v['hstgrpname'])
-                hstgrpid = select_hstgrp_table(v['hstgrpname'])
-                print(v['hstgrpname'] + '(hstgrpid:' + str(hstgrpid) + ')' + ' 添加成功!')
+                hstgrpid=select_hstgrp_table(v['hstgrpname'])
+                if hstgrpid:
+                    print("\033[31;1m"+v['hstgrpname'] + "(hstgrpid:" + str(hstgrpid) + ")" + " 已存在于hstgrp表, 无需添加!\033[0m")
+                    continue
+                else:
+                    insert_hstgrp_table(v['hstgrpname'])
+                    hstgrpid = select_hstgrp_table(v['hstgrpname'])
+                    print(v['hstgrpname'] + '(hstgrpid:' + str(hstgrpid) + ')' + ' 添加成功!')
 
 def create_remoteusers():
     file_path = BASE_DIR + "/conf/db_tables_yaml/remoteusers.yaml"
@@ -299,13 +311,17 @@ def create_remoteusers():
     if data:
         for k,v in data.items():
             print('----------')
-            remoteuserid=select_remoteusers_table(v['remoteusername'])
-            if remoteuserid:
-                print("\033[31;1m"+v['remoteusername'] + "(remoteuserid:" + str(remoteuserid) + ")" + " 已存在于remoteusers表, 无需添加!\033[0m")
+            if len(v['remoteusername']) > 20 or len(v['remoteuserpass']) > 20:
+                print('远程用户名和密码长度不能大于20个字符, 请检查' + v['remoteusername'] + '和' + v['remoteuserpass'] + '的长度!')
+                continue
             else:
-                insert_remoteusers_table(v['remoteusername'],v['remoteuserpass'])
-                remoteuserid = select_remoteusers_table(v['remoteusername'])
-                print(v['remoteusername'] + '(remoteuserid:' + str(remoteuserid) + ')' + ' 添加成功!')
+                remoteuserid=select_remoteusers_table(v['remoteusername'])
+                if remoteuserid:
+                    print("\033[31;1m"+v['remoteusername'] + "(remoteuserid:" + str(remoteuserid) + ")" + " 已存在于remoteusers表, 无需添加!\033[0m")
+                else:
+                    insert_remoteusers_table(v['remoteusername'],v['remoteuserpass'])
+                    remoteuserid = select_remoteusers_table(v['remoteusername'])
+                    print(v['remoteusername'] + '(remoteuserid:' + str(remoteuserid) + ')' + ' 添加成功!')
 
 def create_authorization():
     file_path = BASE_DIR + "/conf/db_tables_yaml/authorization.yaml"
@@ -313,64 +329,68 @@ def create_authorization():
         data = yaml.load(authorization_yaml_file, Loader=yaml.FullLoader)
     if data:
         for k,v in data.items():
-            result=select_authorization_table(v['authorizationname'])
-            if result:
-                print("\033[31;1m"+v['authorizationname'] + " 已存在于authorization表, 请更换策略名称后再添加!\033[0m")
+            print('----------')
+            if len(v['authorizationname']) > 20:
+                print('策略名长度不能大于20个字符, 请检查' + v['authorizationname'] + '的长度!')
                 continue
             else:
-                remoteuserid = select_remoteusers_table(v['remoteusername'])
-                if remoteuserid:
-                    print('----------')
-                    if v.get('username') and v.get('usrgrpname'):
-                        print("\033[31;1mERROR: username 和 usrgrpname同时只能设置一个\033[0m")
-                        continue
-                    if v.get('hostip') and v.get('hstgrpname'):
-                        print("\033[31;1mERROR: hostip 和 hstgrpname同时只能设置一个\033[0m")
-                        continue
-                    if v.get('username'):
-                        userid=select_users_table(v['username'])
-                        if userid:
-                            if v.get('hostip'):
-                                hostid = select_hosts_table(v['hostip'])
-                                if hostid:
-                                    insert_authorization_table(v['authorizationname'],userid,None,hostid,None,remoteuserid)
-                                    print(v['authorizationname'] + ' 授权策略添加成功!')
-                                else:
-                                    print("\033[31;1m"+v['hostip'] + "主机不存在, 请先添加此主机\033[0m")
-                                    continue
-                            else:
-                                hstgrpid = select_hstgrp_table(v['hstgrpname'])
-                                if hstgrpid:
-                                    insert_authorization_table(v['authorizationname'],userid,None,None,hstgrpid,remoteuserid)
-                                    print(v['authorizationname'] + ' 授权策略添加成功!')
-                                else:
-                                    print("\033[31;1m"+v['hstgrpname'] + "主机组不存在, 请先添加此主机组\033[0m")
-                                    continue
-                        else:
-                            print("\033[31;1m"+v['username'] + "用户不存在, 请先添加此用户\033[0m")
-                            continue
-                    else:
-                        usrgrpid = select_usrgrp_table(v['usrgrpname'])
-                        if usrgrpid:
-                            if v.get('hostip'):
-                                hostid = select_hosts_table(v['hostip'])
-                                if hostid:
-                                    insert_authorization_table(v['authorizationname'],None,usrgrpid,hostid,None,remoteuserid)
-                                    print(v['authorizationname'] + ' 授权策略添加成功!')
-                                else:
-                                    print("\033[31;1m"+v['hostip'] + "主机不存在, 请先添加此主机\033[0m")
-                                    continue
-                            else:
-                                hstgrpid = select_hstgrp_table(v['hstgrpname'])
-                                if hstgrpid:
-                                    insert_authorization_table(v['authorizationname'],None,usrgrpid,None,hstgrpid,remoteuserid)
-                                    print(v['authorizationname'] + ' 授权策略添加成功!')
-                                else:
-                                    print("\033[31;1m"+v['hstgrpname'] + "主机组不存在, 请先添加此主机组\033[0m")
-                                    continue
-                        else:
-                            print("\033[31;1m"+v['usrgrpname'] + "用户组不存在, 请先添加此用户组\033[0m")
-                            continue
-                else:
-                    print("\033[31;1m"+v['remoteusername'] + "远程用户不存在, 请先添加此远程用户\033[0m")
+                result=select_authorization_table(v['authorizationname'])
+                if result:
+                    print("\033[31;1m"+v['authorizationname'] + " 已存在于authorization表, 请更换策略名称后再添加!\033[0m")
                     continue
+                else:
+                    remoteuserid = select_remoteusers_table(v['remoteusername'])
+                    if remoteuserid:
+                        if v.get('username') and v.get('usrgrpname'):
+                            print("\033[31;1mERROR: username 和 usrgrpname同时只能设置一个\033[0m")
+                            continue
+                        if v.get('hostip') and v.get('hstgrpname'):
+                            print("\033[31;1mERROR: hostip 和 hstgrpname同时只能设置一个\033[0m")
+                            continue
+                        if v.get('username'):
+                            userid=select_users_table(v['username'])
+                            if userid:
+                                if v.get('hostip'):
+                                    hostid = select_hosts_table(v['hostip'])
+                                    if hostid:
+                                        insert_authorization_table(v['authorizationname'],userid,None,hostid,None,remoteuserid)
+                                        print(v['authorizationname'] + ' 授权策略添加成功!')
+                                    else:
+                                        print("\033[31;1m"+v['hostip'] + "主机不存在, 请先添加此主机\033[0m")
+                                        continue
+                                else:
+                                    hstgrpid = select_hstgrp_table(v['hstgrpname'])
+                                    if hstgrpid:
+                                        insert_authorization_table(v['authorizationname'],userid,None,None,hstgrpid,remoteuserid)
+                                        print(v['authorizationname'] + ' 授权策略添加成功!')
+                                    else:
+                                        print("\033[31;1m"+v['hstgrpname'] + "主机组不存在, 请先添加此主机组\033[0m")
+                                        continue
+                            else:
+                                print("\033[31;1m"+v['username'] + "用户不存在, 请先添加此用户\033[0m")
+                                continue
+                        else:
+                            usrgrpid = select_usrgrp_table(v['usrgrpname'])
+                            if usrgrpid:
+                                if v.get('hostip'):
+                                    hostid = select_hosts_table(v['hostip'])
+                                    if hostid:
+                                        insert_authorization_table(v['authorizationname'],None,usrgrpid,hostid,None,remoteuserid)
+                                        print(v['authorizationname'] + ' 授权策略添加成功!')
+                                    else:
+                                        print("\033[31;1m"+v['hostip'] + "主机不存在, 请先添加此主机\033[0m")
+                                        continue
+                                else:
+                                    hstgrpid = select_hstgrp_table(v['hstgrpname'])
+                                    if hstgrpid:
+                                        insert_authorization_table(v['authorizationname'],None,usrgrpid,None,hstgrpid,remoteuserid)
+                                        print(v['authorizationname'] + ' 授权策略添加成功!')
+                                    else:
+                                        print("\033[31;1m"+v['hstgrpname'] + "主机组不存在, 请先添加此主机组\033[0m")
+                                        continue
+                            else:
+                                print("\033[31;1m"+v['usrgrpname'] + "用户组不存在, 请先添加此用户组\033[0m")
+                                continue
+                    else:
+                        print("\033[31;1m"+v['remoteusername'] + "远程用户不存在, 请先添加此远程用户\033[0m")
+                        continue
