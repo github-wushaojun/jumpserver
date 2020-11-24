@@ -115,7 +115,7 @@ def function_menu_choice(my_name,role,status):
                             print("\033[31;1m编号输入有误!\033[0m")
                             continue
                     else:
-                        print("\033[31;1m请输入数字！\033[0m")
+                        print("\033[31;1m请输入数字编号！\033[0m")
                         continue
                 else:
                     print("\033[31;1mERROR: " + my_name + "用户异常, 未知的用户角色, 请联系管理员!\n\033[0m")
