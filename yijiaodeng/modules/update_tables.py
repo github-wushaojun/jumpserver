@@ -330,8 +330,8 @@ def create_authorization():
     if data:
         for k,v in data.items():
             print('----------')
-            if len(str(v['authorizationname'])) > 20:
-                print('策略名长度不能大于20个字符, 请检查' + v['authorizationname'] + '的长度!')
+            if len(str(v['authorizationname'])) > 30:
+                print('策略名长度不能大于30个字符, 请检查' + v['authorizationname'] + '的长度!')
                 continue
             else:
                 result=select_authorization_table(v['authorizationname'])

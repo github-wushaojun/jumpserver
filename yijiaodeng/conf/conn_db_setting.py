@@ -66,7 +66,7 @@ remoteusers = Table('remoteusers', metadata,
 # 定义授权表
 authorization = Table('authorization', metadata,
         Column('id', Integer, primary_key=True),
-        Column('authorizationname', String(20), nullable=False),
+        Column('authorizationname', String(30), nullable=False),
         Column('userid', Integer),
         Column('usrgrpid', Integer),
         Column('hostid', Integer),

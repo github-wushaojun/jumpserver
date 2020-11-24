@@ -26,7 +26,6 @@ def interactive_shell(chan, username, hostip, remoteusername):
     else:
         windows_shell(chan)
 
-
 def posix_shell(chan, username, hostip, remoteusername):
     import select
 
