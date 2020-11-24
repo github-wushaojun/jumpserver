@@ -169,7 +169,7 @@ def select_hosts(my_name):
     #print(only_hostips)
 
 def select_remoteusers(input_str):
-    for remoteuserid in list(set(hosts_remoteusers_all[hostid_hostip_temp[only_hostips[input_str]]])):
+    for remoteuserid in list(set(hosts_remoteusers_all[hostid_hostip_temp[sorted(only_hostips)[input_str]]])):
         remoteuserid_to_remoteusername = conn.execute(
             "select remoteuserid,remoteusername,remoteuserpass from remoteusers where remoteuserid=%(remoteuserid)s;",
             remoteuserid=remoteuserid
