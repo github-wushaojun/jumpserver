@@ -26,7 +26,7 @@ def main(my_name):
     #备份原始主机列表, 用于恢复
     only_hostips_backup=only_hostips.copy()
     def print_only_hostips():
-        for index, hostip in enumerate(only_hostips):
+        for index, hostip in enumerate(sorted(only_hostips)):
             print('[{:<{len}}] {}'.format(index, hostip, len=len(str(len(only_hostips) - 1))))
         print()
 
@@ -43,10 +43,10 @@ def main(my_name):
                 print_only_hostips()
             input_str = input('请选择主机编号, /跟部分字符搜索匹配的ip(支持正则), 输入q返回主菜单, 回车显示主机列表, ctrl+d退出登录: ').strip()
             if input_str.isdigit():
-                if only_hostips[int(input_str)]:
+                if sorted(only_hostips)[int(input_str)]:
                     # 清空用户列表，防止多次选择，列表数据重复
                     only_remoteusers.clear()
-                    hostip_choice = only_hostips[int(input_str)]
+                    hostip_choice = sorted(only_hostips)[int(input_str)]
                     select_remoteusers(int(input_str))
                     while True:
                         try:
