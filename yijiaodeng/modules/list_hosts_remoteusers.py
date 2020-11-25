@@ -77,7 +77,7 @@ def main(my_name):
                     if input_str_remove_left_slash != "":
                         only_hostips.clear()
                         for hostip_re in only_hostips_backup:
-                            re_result=re.search(input_str_remove_left_slash,hostip_re)
+                            re_result=re.search(repr(input_str_remove_left_slash).strip('\''),hostip_re)
                             if re_result:
                                 only_hostips.append(hostip_re)
                         if len(only_hostips) == 0:
