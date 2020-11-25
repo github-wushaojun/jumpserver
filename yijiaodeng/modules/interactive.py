@@ -59,7 +59,7 @@ def posix_shell(chan, username, hostip, remoteusername):
                 except socket.timeout:
                     pass
             if sys.stdin in r:
-                x = (os.read(sys.stdin.fileno(), 4096)).decode()
+                x = (os.read(sys.stdin.fileno(), 1)).decode()
                 if x != '\r':
                     cmd.append(x)
                 else:
