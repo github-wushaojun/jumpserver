@@ -13,8 +13,6 @@ import pika
 import json
 import sys
 
-conn = conn_db_setting.engine.connect()
-
 def receive():
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
     channel = connection.channel()
@@ -31,10 +29,13 @@ def receive():
 
         sys.stdout.write('body %s\n' %body_new)
         sys.stdout.flush()
+        conn = conn_db_setting.engine.connect()
         insert_cursor = conn.execute(
             "insert into auditlog(time,username,hostip,remoteusername,content)values(%(time)s,%(username)s,%(hostip)s,%(remoteusername)s,%(content)s);",
             time=body_new['time'], username=body_new['username'], hostip=body_new['hostip'], remoteusername=body_new['remoteusername'], content=body_new['content']
         )
+        insert_cursor.close()
+        conn.close()
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     channel.basic_qos(prefetch_count=1)

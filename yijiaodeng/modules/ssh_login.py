@@ -9,7 +9,6 @@ from modules import auditlog_queue_producer
 import sys, paramiko, datetime, struct, fcntl
 import termios
 
-
 def ssh_login(username, hostip, hostport, remoteusername, remoteuserpass):
     def get_win_size():
         if 'TIOCGWINSZ' in dir(termios):
