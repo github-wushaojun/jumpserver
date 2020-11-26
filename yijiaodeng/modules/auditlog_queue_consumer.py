@@ -7,8 +7,6 @@ import os, sys
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-from conf import conn_db_setting
-
 import pika
 import json
 import sys
@@ -24,11 +22,10 @@ def receive():
     channel.queue_bind(exchange='logs_fanout', queue=queue_name)
 
     def callback(ch, method, properties, body):
-        global body_log_file_out
         body_new=json.loads(body)
-
         sys.stdout.write('body %s\n' %body_new)
         sys.stdout.flush()
+        from conf import conn_db_setting
         conn = conn_db_setting.engine.connect()
         insert_cursor = conn.execute(
             "insert into auditlog(time,username,hostip,remoteusername,content)values(%(time)s,%(username)s,%(hostip)s,%(remoteusername)s,%(content)s);",
