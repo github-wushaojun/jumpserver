@@ -96,9 +96,12 @@ def main(my_name):
                 continue
             if break_flag:
                 break
-        except IndexError as e:
+        except (IndexError,UnicodeDecodeError) as e:
             only_hostips = only_hostips_backup.copy()
             print("\033[31;1m\n主机编号输入有误, 请重新输入!\033[0m")
+            continue
+        except Exception as e:
+            print(e)
             continue
 
 def select_hosts(my_name):
