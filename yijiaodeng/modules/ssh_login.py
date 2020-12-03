@@ -22,7 +22,7 @@ def ssh_login(username, hostip, hostport, remoteusername, remoteuserpass):
     try:
         client = paramiko.SSHClient()
         client.load_system_host_keys()
-        client.set_missing_host_key_policy(paramiko.WarningPolicy())
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
         client.connect(hostip,
                        hostport,
                        remoteusername,
@@ -41,7 +41,7 @@ def ssh_login(username, hostip, hostport, remoteusername, remoteuserpass):
         chan.close()
         client.close()
     except Exception as e:
-        print("\033[31;1m\n%s: %s\033[0m" % (remoteusername, e))
+        print("\033[31;1m\n%s: %s, %s\033[0m" % (remoteusername, e.__class__, e))
         try:
             client.close()
         except:

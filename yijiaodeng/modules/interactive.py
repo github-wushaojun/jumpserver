@@ -78,7 +78,7 @@ def posix_shell(chan, username, hostip, remoteusername):
                     break
                 chan.send(x)
     except Exception as e:
-        print(e)
+        print("\033[31;1m\n%s, %s\033[0m" % (e.__class__, e))
     finally:
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
 
