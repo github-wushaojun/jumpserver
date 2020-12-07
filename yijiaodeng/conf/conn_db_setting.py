@@ -97,3 +97,4 @@ if __name__ == "__main__":
         conn.execute(
         "insert into users(username,userpass,role,status)values(%(username)s,%(userpass)s,%(role)s,%(status)s)",username='admin', userpass=pass_md5_calculate(b'admin'), role='admin', status='start'
         )
+
